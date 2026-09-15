@@ -128,3 +128,26 @@ This log captures every prompt given to the AI assistant (Copilot CLI), the mode
 **Result:** `npx playwright test --reporter=html,list` → **65/65 passed** (5.0s) with `video: 'on'` set on the `ui` project. Generated `playwright-report/` (index.html + 34 video/attachment entries under `data/`, ~3.2 MB total) — self-contained and viewable via `npx playwright show-report`. `.gitignore` updated to stop excluding `playwright-report/` (raw `test-results/` working directory remains ignored) so the report can be committed for the team to review.
 
 ---
+
+## Entry 8 (Repo Push / Authentication)
+
+**Timestamp:** 2026-09-14 23:52 -04:00 through 2026-09-15 00:07:21 -04:00
+**Model:** Claude Sonnet 5
+**Context:** `git push` initially failed — the machine's cached git credentials belonged to a different local Windows user account than the repo owner (`Rreovan`), so GitHub returned a 403 permission error.
+**User instructions (verbatim, across turns):**
+> "this is another user on this machine. this repo is owned by Rreovan. we need to create an ssh key on this machine for this repo to be added to that github repo and change the account."
+> "lets download github cli and do a login"
+> "yes be aware i am using a google login for the actual connection to github using edge"
+> "the key should be added be sure not to include the actual key in any documentaion including the prompt log"
+
+**Actions taken:**
+1. Generated a repo-scoped SSH keypair as a first attempt (kept out of global SSH config via a local-only `core.sshCommand`); this was superseded and later deleted once GitHub CLI auth succeeded (SSH port 22 was unreachable from this network, so the SSH approach was abandoned in favor of GitHub CLI over HTTPS).
+2. Used the already-installed GitHub CLI (`gh version 2.90.0`) to run `gh auth login --hostname github.com --git-protocol https --web`, producing a one-time device code; user completed the browser-based authorization as the `Rreovan` account (via Google SSO) in Edge.
+3. Ran `gh auth setup-git` to register a per-host (`github.com`) git credential helper pointing at `gh`, overriding the machine-wide credential manager helper that was resolving to the other local account.
+4. Verified resolution with `git credential fill` (confirmed `username=Rreovan`), then successfully ran `git push -u origin main` — all 4 local commits pushed to `Rreovan/TakeHomeExercise`.
+
+**Security note:** Per explicit user instruction, the SSH public key contents are intentionally NOT recorded in this log or any other repo documentation (no sensitive material — keys, tokens, or credentials — is included in the automation deliverables).
+
+**Elapsed since timer start:** ~57 minutes (repo now live and pushed at 2026-09-15 00:07:21 -04:00; started 2026-09-14 23:10:39 -04:00).
+
+---
