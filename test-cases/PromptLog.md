@@ -181,3 +181,18 @@ This log captures every prompt given to the AI assistant (Copilot CLI), the mode
 **Full re-run:** `npx playwright test --reporter=html,list` → **74/74 passed** (5.9s) with video capture. Artifact sizes: `test-results/` ~3.2 MB, `playwright-report/` ~3.8 MB.
 
 ---
+
+## Entry 11 (Grading Phase Setup)
+
+**Timestamp:** 2026-09-15 00:27 -04:00 through 00:40 -04:00
+**Model:** Claude Sonnet 5
+**User instruction (verbatim, in response to the grading-criteria clarifying question):** "what you have are parts of the whole. we also need to grade the prompts them selves and suggest improvements to increase perfomance and reduce halucination. We also need to grade the decisions made by the model and the time it took to make those decisions. lastly we need to store all the criteria so that we can also have another model complete the same grading. seperate each section with a score form 0-100 with an overal score at the end, grading_scale=percentage, who_grades=review previos answer in the gradign criteria to include"
+**Interpretation:** in addition to the originally-offered criteria (test coverage, code quality, correctness/reliability, documentation, time efficiency), added two more graded dimensions: (6) quality of the architect's own prompts, with concrete improvement suggestions, and (7) quality/latency of the AI's own decisions during the session. Scoring scale changed to 0-100% per section with an overall average. Per "store all the criteria so that another model can complete the same grading," the rubric itself was written as a separate, model-agnostic document (`test-cases/GradingRubric.md`) distinct from any actual filled-in score (`test-cases/Grading.md`), so a different model/grader could apply the same rubric independently and produce a comparable result.
+
+**Deliverables produced:**
+1. `test-cases/GradingRubric.md` — reusable 7-section rubric (test coverage, code quality, correctness/reliability, documentation, time efficiency, prompt quality, AI decision quality/latency), each with explicit 0-100 scoring bands and required evidence citations, plus instructions for how a grading model should apply it.
+2. `test-cases/Grading.md` — Entry 1: Claude Sonnet 5's self-assessment against that rubric, citing specific PromptLog entries, commit hashes, and a live re-verification run (74/74 passed). Scores: Test Coverage 92, Code Quality 88, Correctness & Reliability 90, Documentation 94, Time Efficiency 95, Prompt Quality 68, AI Decision Quality 78 → **Overall 86/100**. Includes concrete prompt-rephrasing examples and a table of specific AI decisions with time-to-decision and whether each was correct on the first attempt.
+
+**Note:** this is a self-assessment (same model that performed the work); the grading file explicitly marks the architect's review/override as pending.
+
+---
