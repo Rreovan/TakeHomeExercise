@@ -13,10 +13,13 @@ Companion document to `test-cases/PromptLog.md` (the full chronological prompt/d
 | All 31 API tests implemented & passing; flake found & fixed | 2026-09-15 00:00 -04:00 | ~0:49 |
 | Repo authenticated & pushed to GitHub | 2026-09-15 00:07 -04:00 | ~0:57 |
 | Stretch tests (9), README, agent docs, videos committed | 2026-09-15 00:27 -04:00 | ~1:17 |
+| GradingRubric.md + Grading.md (self-assessment) committed | 2026-09-15 00:40 -04:00 | ~1:29 |
+| Independent Opus 5 grading pass (Grading-Opus.md) committed | 2026-09-15 00:53 -04:00 | ~1:43 |
+| **Session closeout — prompt logging stopped** | **2026-09-15 00:53:50 -04:00** | **1:43:11** |
 | 3-hour grading checkpoint (if suite incomplete) | 2026-09-15 02:10:39 -04:00 | 3:00 |
 | 4-hour hard deadline | 2026-09-15 03:10:39 -04:00 | 4:00 |
 
-**Status at this checkpoint: full suite complete, ahead of schedule (~1:17 elapsed of the 4:00 budget).**
+**FINAL STATUS: Exercise completed in 1 hour 43 minutes 11 seconds — 2h 16m 49s ahead of the 4:00:00 budget, well inside the 3:00:00 grading-checkpoint threshold.**
 
 ## What Was Delivered
 

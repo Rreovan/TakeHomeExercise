@@ -196,3 +196,45 @@ This log captures every prompt given to the AI assistant (Copilot CLI), the mode
 **Note:** this is a self-assessment (same model that performed the work); the grading file explicitly marks the architect's review/override as pending.
 
 ---
+
+## Entry 12 (Independent Second Grading Pass)
+
+**Timestamp:** 2026-09-15 00:53 -04:00
+**Model:** Claude Sonnet 5 (orchestrator) delegating to Claude Opus 5 (independent grader)
+**User instruction (verbatim):** "now lets open an opus subagent that will also complete the grading rubric and save the results to another file so that we can compare both files"
+
+Launched a background sub-agent (Claude Opus 5) with instructions to apply `GradingRubric.md` independently, without reading `Grading.md` (Entry 1's self-assessment), to avoid anchoring bias. The agent re-ran the full suite itself 3x (74/74 each time), read all source/spec/doc files, and produced `test-cases/Grading-Opus.md` ("Entry 2"). It disclosed one unavoidable partial leak: this very PromptLog (which the rubric requires reading) contains Entry 1's scores inline, so full blindness wasn't possible — it flagged this as a documentation defect and scored from primary evidence regardless.
+
+**Result comparison:**
+
+| Section | Sonnet 5 (self) | Opus 5 (independent) |
+|---|---|---|
+| Test Coverage | 92 | 90 |
+| Code Quality | 88 | 84 |
+| Correctness & Reliability | 90 | 96 |
+| Documentation | 94 | 90 |
+| Time Efficiency | 95 | 97 |
+| Prompt Quality | 68 | 72 |
+| AI Decision Quality/Latency | 78 | 85 |
+| **Overall** | **86** | **87.7** |
+
+Both files committed and pushed (`0e975b9`).
+
+---
+
+## Entry 13 (Session Closeout — Prompt Logging Stopped)
+
+**Timestamp:** 2026-09-15 00:53:50 -04:00
+**Model:** Claude Sonnet 5
+**User instruction (verbatim):** "now that we are done lets stop logging promts and state the overal time to completion in the document"
+
+Per architect direction, this is the **final entry** in this prompt log. Logging of individual prompts/decisions is discontinued as of this entry; any further work in this session (if any) will not be logged prompt-by-prompt here.
+
+**Total time to completion: 1 hour 43 minutes 11 seconds** (timer start 2026-09-14 23:10:39 -04:00 → session closeout 2026-09-15 00:53:50 -04:00), against the 4:00:00 budget — completed with **2h 16m 49s to spare**, well inside the 3-hour grading-checkpoint threshold.
+
+**Final deliverable state at closeout:**
+- 74/74 automated tests passing (43 UI + 31 API), reconfirmed stable across many repeated runs, no known flakiness.
+- Full documentation set: `TestCases.md`, `PromptLog.md` (this file), `SessionSummary.md`, `GradingRubric.md`, `Grading.md` (Sonnet 5 self-assessment, Overall 86/100), `Grading-Opus.md` (independent Opus 5 assessment, Overall 87.7/100), `README.md`, `.github/copilot-instructions.md`, `CLAUDE.md`.
+- All work committed and pushed to `origin/main` on `https://github.com/Rreovan/TakeHomeExercise.git`.
+
+---
