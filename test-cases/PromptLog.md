@@ -151,3 +151,33 @@ This log captures every prompt given to the AI assistant (Copilot CLI), the mode
 **Elapsed since timer start:** ~57 minutes (repo now live and pushed at 2026-09-15 00:07:21 -04:00; started 2026-09-14 23:10:39 -04:00).
 
 ---
+
+## Entry 9 (Phase 5 — Stretch Tests, README, Agent Docs)
+
+**Timestamp:** 2026-09-15 00:10 -04:00 onward
+**Model:** Claude Sonnet 5
+**User instruction (verbatim):** "lets setup the readme.md and add the stretch ui tests as well. be sure to capture video of the tests passing. once done create a .md file of this session that we can use to grade alongside the prompts file. when we get to this point lets review what we are actually grading. we wiill also have a separate file with the grade along with the model and version"
+
+**Actions taken:**
+1. **Exploration first (no guessing):** wrote a disposable spec (`tests/ui/_explore.spec.ts`, deleted after use) to observe actual behavior of `problem_user`, `visual_user`, and `error_user` — image sources, sort-dropdown effect, and checkout field behavior. Confirmed:
+   - `problem_user`: all 6 product images resolve to an identical broken placeholder asset; Z-A sort has no effect; typed input into the Last Name field is not committed, and checkout correctly blocks with "Last Name is required".
+   - `visual_user`: exactly 1 of 6 images (Backpack) is broken, others render correctly; sort works correctly; full checkout completes successfully.
+   - `error_user`: all images render correctly; Z-A sort has no effect (same bug as problem_user); Last Name field is not retained, but — unlike problem_user — checkout proceeds to step two anyway (validation bypass bug).
+2. Added 9 stretch UI test cases (`UI-060`–`UI-082`) to `test-cases/TestCases.md` and implemented them in `tests/ui/quirky-users.spec.ts`, reusing the existing POM (extended `InventoryPage` with an `itemImages` locator). Verified 18/18 passing across 2 repeats (no flake).
+3. Also confirmed via exploration that error_user's cart "Remove" button (a commonly-cited historical SauceDemo bug) works correctly on the current app version — no test added for a bug that no longer reproduces.
+4. Added `README.md` (setup, running tests, project structure, design notes, reporting).
+5. Added AI-agent-specific guidance docs per user request: `.github/copilot-instructions.md` (GitHub Copilot) and `CLAUDE.md` (Claude Code) — both describing project conventions, commands, traceability rules (test IDs ↔ TestCases.md), the JSONPlaceholder mock-API caveat, and the "verify quirky behavior before asserting it" rule.
+6. Re-ran the **full suite with video recording** (`ui` project `use.video: 'on'`, set in Entry 7) to regenerate `playwright-report/` including the new stretch tests, for team review.
+**Total test count now: 74** (43 UI + 31 API).
+
+---
+
+## Entry 10 (Artifact Labeling Verification)
+
+**Timestamp:** 2026-09-15 00:18 -04:00
+**Model:** Claude Sonnet 5
+**User instruction (verbatim):** "beforw we rerun lets make sure the results and the videos are labeled with the actual test name"
+**Verification:** Confirmed Playwright's default `test-results/` output already names each test's artifact folder with the full spec name, test case ID, and title (e.g. `checkout-Checkout-UI-030-Complete-checkout-with-valid-info-ui/video.webm`), so every recorded video is unambiguously traceable to its test case even when browsed as raw files (not just inside the HTML report UI). Decision: commit **both** `test-results/` (raw, individually-labeled per-test folders/videos) and `playwright-report/` (interactive HTML viewer) for team review. Updated `.gitignore` accordingly (only `node_modules/` and `playwright/.cache/` remain ignored).
+**Full re-run:** `npx playwright test --reporter=html,list` → **74/74 passed** (5.9s) with video capture. Artifact sizes: `test-results/` ~3.2 MB, `playwright-report/` ~3.8 MB.
+
+---

@@ -5,6 +5,7 @@ export class InventoryPage {
   readonly items: Locator;
   readonly itemNames: Locator;
   readonly itemPrices: Locator;
+  readonly itemImages: Locator;
   readonly sortDropdown: Locator;
   readonly cartBadge: Locator;
   readonly cartLink: Locator;
@@ -16,6 +17,7 @@ export class InventoryPage {
     this.items = page.locator('.inventory_item');
     this.itemNames = page.locator('.inventory_item_name');
     this.itemPrices = page.locator('.inventory_item_price');
+    this.itemImages = page.locator('.inventory_item img');
     this.sortDropdown = page.locator('[data-test="product-sort-container"]');
     this.cartBadge = page.locator('.shopping_cart_badge');
     this.cartLink = page.locator('.shopping_cart_link');

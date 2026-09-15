@@ -71,6 +71,22 @@ Base URL: https://www.saucedemo.com — standard credentials: `standard_user` / 
 |---|---|---|---|---|---|---|
 | UI-050 | Logout clears session | Positive | P2 | Logged in | Open hamburger menu; click "Logout" | Redirected to login page; browser back navigation does not restore inventory page (session cleared) |
 
+### Stretch — Quirky Users (problem_user / visual_user / error_user)
+
+> Behaviors below were confirmed via a one-off exploration pass against the live app before writing assertions (these quirks are undocumented and version-dependent).
+
+| ID | Title | Type | Priority | Preconditions | Steps | Expected Result |
+|---|---|---|---|---|---|---|
+| UI-060 | problem_user has broken/mismatched product images | Negative | P3 | Login as `problem_user` | Load inventory page; inspect all product `<img>` `src` attributes | All 6 images resolve to the identical broken placeholder asset (`sl-404...`) |
+| UI-061 | problem_user sort dropdown does not reorder products | Negative | P3 | Login as `problem_user` | Select "Name (Z to A)" | Product order is unchanged from default (sort is broken for this user) |
+| UI-062 | problem_user cannot complete checkout (Last Name not retained) | Negative | P3 | Login as `problem_user`, item in cart, on checkout step one | Fill First/Last/Postal with valid values; click Continue | Last Name input value reads back empty (input not committed); "Error: Last Name is required" shown |
+| UI-070 | visual_user has one broken product image | Negative | P3 | Login as `visual_user` | Load inventory page; inspect all product `<img>` `src` attributes | Exactly 1 of 6 images (Sauce Labs Backpack) is the broken placeholder; other 5 render correctly |
+| UI-071 | visual_user sort dropdown functions correctly | Positive | P3 | Login as `visual_user` | Select "Name (Z to A)" | Product names correctly reordered descending (contrasts with problem_user/error_user bug) |
+| UI-072 | visual_user can complete full checkout successfully | Positive | P3 | Login as `visual_user` | Add item, complete checkout flow with valid info | Order completes; "Thank you for your order!" confirmation shown |
+| UI-080 | error_user product images render correctly | Positive | P3 | Login as `error_user` | Load inventory page; inspect all product `<img>` `src` attributes | None of the 6 images are the broken placeholder |
+| UI-081 | error_user sort dropdown does not reorder products | Negative | P3 | Login as `error_user` | Select "Name (Z to A)" | Product order is unchanged from default (same sort bug as problem_user) |
+| UI-082 | error_user checkout bypasses Last Name validation | Negative | P3 | Login as `error_user`, item in cart, on checkout step one | Fill First/Last/Postal with valid values; click Continue | Last Name input value reads back empty, yet checkout proceeds to step two anyway (inconsistent/buggy validation) |
+
 ---
 
 ## API Test Cases — JSONPlaceholder (`tests/api`)
@@ -135,4 +151,4 @@ Base URL: https://jsonplaceholder.typicode.com
 
 ---
 
-**Totals:** 34 UI cases, 31 API cases = 65 test cases.
+**Totals:** 43 UI cases (34 core + 9 stretch quirky-user), 31 API cases = 74 test cases.
