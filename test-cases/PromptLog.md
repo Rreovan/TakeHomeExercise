@@ -87,3 +87,16 @@ This log captures every prompt given to the AI assistant (Copilot CLI), the mode
 - Produced `test-cases/TestCases.md`: 34 UI cases (login, inventory/sort, cart, checkout, session) + 31 API cases (posts, comments, albums/photos, todos, users, all with nested-resource and required/optional field coverage) = 65 total test cases.
 
 ---
+
+## Entry 5 (Phase 3 — UI Automation)
+
+**Timestamp:** 2026-09-14 23:40 -04:00
+**Model:** Claude Sonnet 5
+**Action:** No new user prompt; assistant implemented all 34 UI test cases against SauceDemo using a Page Object Model:
+- `tests/ui/pages/LoginPage.ts`, `InventoryPage.ts`, `CartPage.ts`, `CheckoutPage.ts`
+- `tests/ui/login.spec.ts` (UI-001..008), `inventory.spec.ts` (UI-010..018), `cart.spec.ts` (UI-020..024), `checkout.spec.ts` (UI-030..040), `session.spec.ts` (UI-050)
+
+**Validation:** Ran `npx playwright test --project=ui` against the live saucedemo.com site. **Result: 34/34 passed** on first full run (7.0s). No assertion adjustments were needed — observed app behavior matched the documented expectations in TestCases.md (including empty-cart checkout, long-string inputs, and non-numeric postal code all being accepted without validation, as anticipated).
+**Commit:** (pending) — "test: implement all 34 SauceDemo UI test cases (POM)"
+
+---
