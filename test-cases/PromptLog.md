@@ -56,3 +56,34 @@ This log captures every prompt given to the AI assistant (Copilot CLI), the mode
 - Commit after each major phase: (1) scaffold, (2) test case doc, (3) UI tests, (4) API tests.
 
 ---
+
+## Entry 3 (Phase 1 — Scaffold)
+
+**Timestamp:** 2026-09-14 23:15 -04:00
+**Model:** Claude Sonnet 5
+**Action:** No new user prompt; assistant executed scaffold: `npm init -y`, installed `@playwright/test`, `typescript`, `@types/node`; ran `npx playwright install chromium --with-deps`; created `tsconfig.json`, `playwright.config.ts` (projects: `ui` -> saucedemo, `api` -> jsonplaceholder, chromium only), `.gitignore`, `tests/ui`, `tests/api`, `test-cases` folders, npm scripts (`test`, `test:ui`, `test:api`, `report`).
+**Clarifying question:** Asked for git commit identity (none configured on machine).
+**Answer (verbatim):** `git_name=Rreovan, git_email=richreo@gmail.com, scope=local`
+**Commit:** `ac423c0` — "chore: scaffold Playwright + TypeScript project structure"
+
+---
+
+## Entry 4 (Phase 2 — Test Case Document)
+
+**Timestamp:** 2026-09-14 23:20 -04:00
+**Model:** Claude Sonnet 5
+**Question asked (via structured form):**
+- How to handle API "required field" negative tests given JSONPlaceholder is a non-persisting mock with no real server-side validation (no 400/422 ever returned)
+- TestCases.md format (table vs. detailed per-case sections)
+- Which UI negative/edge areas to include (login field limits, checkout field limits, disabled buttons, cart edge cases, problem/visual/error user quirks)
+
+**Answer (verbatim):**
+> api_negative_handling=document_mock_behavior, test_case_doc_format=table, ui_negative_scope=login_field_limits, checkout_field_limits, disabled_buttons, cart_edge_cases
+
+**Decisions locked in:**
+- API "negative" tests assert the actual documented mock behavior (still returns 200/201 even for missing/malformed payloads) and explicitly call this out rather than pretending the mock rejects bad input.
+- TestCases.md written as markdown tables, one per functional area, for both UI and API suites.
+- UI negative scope = login field length/special-char limits, checkout form field limits, disabled/no-op button states, cart edge cases. (problem_user/visual_user/error_user quirks deliberately excluded from this pass — can be a stretch addition if time remains.)
+- Produced `test-cases/TestCases.md`: 34 UI cases (login, inventory/sort, cart, checkout, session) + 31 API cases (posts, comments, albums/photos, todos, users, all with nested-resource and required/optional field coverage) = 65 total test cases.
+
+---
