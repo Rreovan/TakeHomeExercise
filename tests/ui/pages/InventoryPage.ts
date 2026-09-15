@@ -37,20 +37,25 @@ export class InventoryPage {
     return item.getByRole('button', { name: 'Remove' });
   }
 
+  // Known SauceDemo catalog (stable across the site); used for deterministic bulk cart operations.
+  static readonly ALL_PRODUCT_NAMES = [
+    'Sauce Labs Backpack',
+    'Sauce Labs Bike Light',
+    'Sauce Labs Bolt T-Shirt',
+    'Sauce Labs Fleece Jacket',
+    'Sauce Labs Onesie',
+    'Test.allTheThings() T-Shirt (Red)',
+  ];
+
   async addAllToCart() {
-    const buttons = this.page.getByRole('button', { name: 'Add to cart' });
-    const count = await buttons.count();
-    for (let i = 0; i < count; i++) {
-      await buttons.first().click();
+    for (const name of InventoryPage.ALL_PRODUCT_NAMES) {
+      await this.addToCartByName(name).click();
     }
   }
 
   async removeAllFromCart() {
-    const buttons = this.page.getByRole('button', { name: 'Remove' });
-    let count = await buttons.count();
-    while (count > 0) {
-      await buttons.first().click();
-      count = await buttons.count();
+    for (const name of InventoryPage.ALL_PRODUCT_NAMES) {
+      await this.removeFromCartByName(name).click();
     }
   }
 

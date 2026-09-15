@@ -26,6 +26,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'https://www.saucedemo.com',
+        video: 'on',
       },
     },
     {

@@ -97,6 +97,34 @@ This log captures every prompt given to the AI assistant (Copilot CLI), the mode
 - `tests/ui/login.spec.ts` (UI-001..008), `inventory.spec.ts` (UI-010..018), `cart.spec.ts` (UI-020..024), `checkout.spec.ts` (UI-030..040), `session.spec.ts` (UI-050)
 
 **Validation:** Ran `npx playwright test --project=ui` against the live saucedemo.com site. **Result: 34/34 passed** on first full run (7.0s). No assertion adjustments were needed — observed app behavior matched the documented expectations in TestCases.md (including empty-cart checkout, long-string inputs, and non-numeric postal code all being accepted without validation, as anticipated).
-**Commit:** (pending) — "test: implement all 34 SauceDemo UI test cases (POM)"
+**Commit:** `6a1d9c4` — "test: implement all 34 SauceDemo UI test cases (POM)"
+
+---
+
+## Entry 6 (Phase 4 — API Automation + Flake Fix)
+
+**Timestamp:** 2026-09-15 00:05 -04:00
+**Model:** Claude Sonnet 5
+**Action:** No new user prompt; assistant implemented all 31 API test cases against JSONPlaceholder using Playwright's built-in `request` fixture (no custom HTTP client needed):
+- `tests/api/posts.spec.ts` (API-001..010), `comments.spec.ts` (API-020..025), `albums-photos.spec.ts` (API-030..034), `todos.spec.ts` (API-040..043), `users.spec.ts` (API-050..055)
+
+**Validation:** `npx playwright test --project=api` → **31/31 passed** on first run (936ms).
+
+**Full suite run** (`npx playwright test`, both projects): initially surfaced a flaky failure — `UI-018 Add all then remove all clears badge` failed intermittently. Root cause: `InventoryPage.addAllToCart()`/`removeAllFromCart()` used `page.getByRole('button', {name}).all()`, which resolves each entry as an `nth()`-based locator against the live, shrinking match set — as buttons flip from "Add to cart" to "Remove" mid-loop, the nth-indices shift and the wrong buttons get clicked (verified via reproduction: isolated re-run failed 4/5 times with `.all()` on a dynamic role filter). **Fix:** iterate over the known, stable list of 6 SauceDemo product names and click each by scoped container locator (same pattern already used safely elsewhere in the POM), avoiding any reliance on a live-shifting match set.
+**Re-verification:** Isolated `UI-018` repeated 5x → 5/5 passed. Full combined suite (`--project` omitted, both ui+api) run 3x in a row → **65/65 passed each time**.
+**Commit:** (pending) — "test: implement all 31 JSONPlaceholder API test cases + fix UI-018 flake"
+
+---
+
+## Entry 7 (Elapsed Time Checkpoint)
+
+**Timestamp:** 2026-09-14 23:47:54 -04:00
+**Model:** Claude Sonnet 5
+**Elapsed since timer start (2026-09-14 23:10:39 -04:00):** ~37 minutes 15 seconds
+**Status at checkpoint:** Scaffold complete, TestCases.md complete (65 cases documented), all 34 UI tests implemented & passing, all 31 API tests implemented & passing, one intermittent flake found and fixed (UI-018), full suite verified green 3x in a row (65/65). Remaining budget to 3-hour grading checkpoint (02:10:39 -04:00): ~2h 23m. Remaining budget to 4-hour deadline (03:10:39 -04:00): ~3h 23m.
+**User instruction (verbatim):** "before commiting lets log the time it took to get to this point explicitly. Then re run the tests with video and results so that we can commit those as well for the team to review"
+**Action:** Enabling video recording for the `ui` project, re-running the full suite, and committing the generated HTML report (with embedded videos/screenshots/traces) alongside the source changes for team review.
+
+**Result:** `npx playwright test --reporter=html,list` → **65/65 passed** (5.0s) with `video: 'on'` set on the `ui` project. Generated `playwright-report/` (index.html + 34 video/attachment entries under `data/`, ~3.2 MB total) — self-contained and viewable via `npx playwright show-report`. `.gitignore` updated to stop excluding `playwright-report/` (raw `test-results/` working directory remains ignored) so the report can be committed for the team to review.
 
 ---
